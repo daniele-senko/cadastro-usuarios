@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://noon-bubble-pudding.glitch.me'
+    baseURL: 'https://api-cadastro-usuarios-53nf.onrender.com/'
 })
 
 export default api;
