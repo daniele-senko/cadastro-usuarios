@@ -3,23 +3,26 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export default async function handler(req, res) {
-  try {
-    if (req.method === "GET") {
+  const { method } = req;
+
+  if (method === "GET") {
+    try {
       const users = await prisma.user.findMany();
-      res.status(200).json(users);
-    } else if (req.method === "POST") {
-      const { name, age, email } = req.body;
-      const user = await prisma.user.create({ data: { name, age, email } });
-      res.status(201).json(user);
-    } else if (req.method === "DELETE") {
-      const { id } = req.query;
-      await prisma.user.delete({ where: { id } });
-      res.status(200).json({ message: "Usuário deletado" });
-    } else {
-      res.status(405).json({ message: "Method not allowed" });
+      return res.status(200).json(users);
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao buscar usuários" });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Erro no servidor" });
   }
+
+  if (method === "POST") {
+    try {
+      const { name, email, age } = req.body;
+      const newUser = await prisma.user.create({ data: { name, email, age } });
+      return res.status(201).json(newUser);
+    } catch (error) {
+      return res.status(500).json({ error: "Erro ao criar usuário" });
+    }
+  }
+
+  return res.status(405).json({ error: "Método não permitido" });
 }
