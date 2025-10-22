@@ -10,25 +10,35 @@ function Home() {
   const inputAge = useRef();
   const inputEmail = useRef();
 
-  async function getUsers() {
-    const usersFromApi = await api.get("/usuarios");
-
-    setUsers(usersFromApi.data);
-    console.log(users);
+async function getUsers() {
+  try {
+    const response = await api.get("/");
+    // Fallback: se não for array, usar array vazio
+    const data = Array.isArray(response.data) ? response.data : [];
+    setUsers(data);
+    console.log("Usuários recebidos:", data);
+  } catch (error) {
+    console.error("Erro ao buscar usuários:", error);
+    setUsers([]); // fallback seguro em caso de erro
   }
+}
 
   async function createUsers() {
-    await api.post("/usuarios", {
+    await api.post("/", {
       name: inputName.current.value,
       age: inputAge.current.value,
       email: inputEmail.current.value,
     });
 
     getUsers();
+
+    inputName.current.value = "";
+    inputAge.current.value = "";
+    inputEmail.current.value = "";
   }
 
   async function deleteUsers(id) {
-    await api.delete(`/usuarios/${id}`)
+    await api.delete(`/${id}`)
 
     getUsers()
   }
@@ -49,18 +59,12 @@ function Home() {
         </button>
       </form>
 
-      {users.map((user) => (
+      {Array.isArray(users) && users.map((user) => (
         <div key={user.id} className="card">
           <div>
-            <p>
-              Nome: <span>{user.name}</span>
-            </p>
-            <p>
-              Idade: <span>{user.age}</span>
-            </p>
-            <p>
-              Email: <span>{user.email}</span>
-            </p>
+            <p>Nome: <span>{user.name}</span></p>
+            <p>Idade: <span>{user.age}</span></p>
+            <p>Email: <span>{user.email}</span></p>
           </div>
           <button onClick={() => deleteUsers(user.id)}>
             <img src={Trash} />
