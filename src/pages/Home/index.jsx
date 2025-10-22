@@ -12,7 +12,7 @@ function Home() {
 
 async function getUsers() {
   try {
-    const response = await api.get("/usuarios");
+    const response = await api.get("/");
     const data = Array.isArray(response.data) ? response.data : [];
     setUsers(data);
     console.log("Usuários recebidos:", data);
@@ -23,7 +23,7 @@ async function getUsers() {
 }
 
   async function createUsers() {
-    await api.post("/usuarios", {
+    await api.post("/", {
       name: inputName.current.value,
       age: inputAge.current.value,
       email: inputEmail.current.value,
@@ -37,7 +37,7 @@ async function getUsers() {
   }
 
   async function deleteUsers(id) {
-    await api.delete(`/usuarios/${id}`)
+    await api.delete(`/${id}`)
 
     getUsers()
   }
