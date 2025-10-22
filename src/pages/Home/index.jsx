@@ -12,8 +12,7 @@ function Home() {
 
 async function getUsers() {
   try {
-    const response = await api.get("/");
-    // Fallback: se não for array, usar array vazio
+    const response = await api.get("/usuarios");
     const data = Array.isArray(response.data) ? response.data : [];
     setUsers(data);
     console.log("Usuários recebidos:", data);
@@ -24,7 +23,7 @@ async function getUsers() {
 }
 
   async function createUsers() {
-    await api.post("/", {
+    await api.post("/usuarios", {
       name: inputName.current.value,
       age: inputAge.current.value,
       email: inputEmail.current.value,
@@ -38,7 +37,7 @@ async function getUsers() {
   }
 
   async function deleteUsers(id) {
-    await api.delete(`/${id}`)
+    await api.delete(`/usuarios/${id}`)
 
     getUsers()
   }
