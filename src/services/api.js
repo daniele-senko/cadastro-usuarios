@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://api-cadastro-usuarios-53nf.onrender.com/'
+    baseURL: 'cadastro-usuarios-new.vercel.app/usuarios'
 })
 
 export default api;
